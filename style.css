@@ -1,0 +1,7 @@
+#screen {
+    height: 50px;
+    border: 3px black;
+    background-color: burlywood;
+    font-weight: bold;
+    font-size: large;
+}
