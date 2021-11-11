@@ -36,12 +36,13 @@ let displayedNumber = null;
 
 function computeNumber(button) {
     if (!allowModifiers) resetModifiers(true);
-    displayedNumberArray.push(button.id);
+    displayedNumberArray.push(button);
     display.textContent = displayedNumberArray.join("");
 }
 
 numberButtons.addEventListener('click', e => {
-    if (e.target.nodeName === "BUTTON") computeNumber(e.target);
+    if (e.target.nodeName === "BUTTON") computeNumber(e.target.id);
+    console.log(e.target.id);
 });
 
 // Clicking an operator
@@ -59,7 +60,7 @@ function selectOperator(button) {
 
     switch (operator) {
         case null:
-            operator = button.id;
+            operator = button;
             previousNumber = (displayedNumberArray.length === 0) ?
                 previousNumber : +displayedNumberArray.join("");
             display.textContent = previousNumber;
@@ -70,7 +71,7 @@ function selectOperator(button) {
             displayedNumber = +displayedNumberArray.join("");
             previousNumber = operate(previousNumber,
                 displayedNumber, operator);
-            operator = button.id;
+            operator = button;
             display.textContent = previousNumber;
             resetModifiers(false);
             break;
@@ -80,7 +81,7 @@ function selectOperator(button) {
 
 
 operatorButtons.addEventListener('click', e => {
-    if (e.target.nodeName === "BUTTON") selectOperator(e.target);
+    if (e.target.nodeName === "BUTTON") selectOperator(e.target.id);
 });
 // clicking "equal"
 const equalButton = document.getElementById("equal");
@@ -137,7 +138,9 @@ negativeButton.addEventListener('click', function toggleNegative() {
 let isDecimal = false;
 
 const decimalButton = document.getElementById("decimal");
-decimalButton.addEventListener('click', function toggleDecimal() {
+decimalButton.addEventListener('click', toggleDecimal);
+
+function toggleDecimal() {
     if (allowModifiers === true) {
 
         switch (displayedNumberArray.length) {
@@ -156,7 +159,7 @@ decimalButton.addEventListener('click', function toggleDecimal() {
                 } else return;
         }
     }
-});
+}
 
 // Clear and backspace
 const backspaceButton = document.getElementById("backspace");
@@ -196,3 +199,25 @@ function resetModifiers(bool) {
     isDecimal = false;
     displayedNumberArray = [];
 }
+
+
+// Keyboard shortcuts
+
+document.addEventListener("keydown", function (e) {
+    const numeric = /["0-9"]/;
+
+    if (e.key === "+") selectOperator("plus");
+    if (e.key === "-") selectOperator("minus");
+    if (e.key === "/") selectOperator("divide");
+    if (e.key === "*") selectOperator("multiply");
+    if (e.key.match(numeric)) computeNumber(e.key);
+    if (e.key === "Enter") pressequal();
+    if (e.key === "Escape") clearButton();
+    if (e.key === "Backspace") backspaceButton();
+    if (e.key === ".") toggleDecimal();
+
+
+
+
+
+});
