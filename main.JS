@@ -31,39 +31,79 @@ function operate(a, b, operator) {
 const numberButtons = document.getElementById("numbers-buttons-container");
 const display = document.getElementById("display");
 let displayedNumberArray = [];
-let displayedNumber = 0;
+let displayedNumber = null;
 
 function computeNumber(button) {
     displayedNumberArray.push(button.id);
-    displayedNumber = displayedNumberArray.join("");
-    display.textContent = displayedNumber;
-
+    display.textContent = displayedNumberArray.join("");
 }
+
 numberButtons.addEventListener('click', e => {
     if (e.target.nodeName === "BUTTON") computeNumber(e.target);
 });
 
 // Clicking an operator
 const operatorButtons = document.getElementById("operators-buttons-container");
-let operator = '';
-let a = 0;
+let operator = null;
+let previousNumber = 0;
 
 function selectOperator(button) {
-    operator = button.id;
-    a = (a === 0) ? +displayedNumber : operate(a, displayedNumber, operator);
-    display.textContent = a;
-    displayedNumberArray = [];
+    if (previousEqual) {
+        previousNumber = previousEqual;
+        previousEqual = null;
+    }
+
+    switch (operator) {
+        case null:
+            operator = button.id;
+            previousNumber = (displayedNumberArray.length === 0) ?
+                previousNumber : +displayedNumberArray.join("");
+            display.textContent = previousNumber;
+            displayedNumberArray = [];
+            break;
+
+        default:
+            displayedNumber = +displayedNumberArray.join("");
+            previousOperator = operator;
+            displayedNumber = operate(previousNumber,
+                displayedNumber, previousOperator);
+            operator = button.id;
+            display.textContent = displayedNumber;
+            displayedNumberArray = [];
+            previousNumber = displayedNumber;
+
+            break;
+
+    }
 }
+
 
 operatorButtons.addEventListener('click', e => {
     if (e.target.nodeName === "BUTTON") selectOperator(e.target);
 });
 // clicking "equal"
 const equalButton = document.getElementById("equal");
+let previousEqual = null;
+let previousOperator = null;
 
 function pressequal() {
-    a = operate(a, +displayedNumber, operator);
-    display.textContent = a;
-    displayedNumberArray = [];
+    switch (!!previousEqual) {
+        case true:
+            previousEqual = operate(previousNumber, previousEqual,
+                previousOperator);
+            display.textContent = previousEqual;
+
+            break;
+
+        default:
+            displayedNumber = +displayedNumberArray.join("");
+            previousEqual = operate(previousNumber, displayedNumber, operator);
+            display.textContent = previousEqual;
+            displayedNumberArray = [];
+            previousNumber = displayedNumber;
+            previousOperator = operator;
+            operator = null;
+            break;
+    }
 }
 equalButton.addEventListener('click', pressequal);
