@@ -63,8 +63,6 @@ function selectOperator(button) {
             previousNumber = (displayedNumberArray.length === 0) ?
                 previousNumber : +displayedNumberArray.join("");
             display.textContent = previousNumber;
-            displayedNumberArray = [];
-
             resetModifiers(true);
             break;
 
@@ -74,7 +72,6 @@ function selectOperator(button) {
                 displayedNumber, operator);
             operator = button.id;
             display.textContent = previousNumber;
-            displayedNumberArray = [];
             resetModifiers(false);
             break;
 
@@ -102,7 +99,6 @@ function pressequal() {
             displayedNumber = +displayedNumberArray.join("");
             previousEqual = operate(previousNumber, displayedNumber, operator);
             display.textContent = previousEqual;
-            displayedNumberArray = [];
             previousNumber = displayedNumber;
             previousOperator = operator;
             operator = null;
@@ -135,10 +131,39 @@ function toggleNegative() {
 }
 
 const negativeButton = document.getElementById("negative");
-
 negativeButton.addEventListener('click', e => toggleNegative());
 
-function resetModifiers(a) {
-    allowModifiers = (a === true) ? true : false;
+// Toggle decimal
+
+let isDecimal = false;
+
+function toggleDecimal() {
+    if (allowModifiers === true) {
+        switch (displayedNumberArray.length) {
+
+            case (0):
+                displayedNumberArray.unshift("0", ".");
+                display.textContent = displayedNumberArray.join("");
+
+                break;
+
+            default:
+                if (!isDecimal) {
+                    displayedNumberArray.push(".");
+                    display.textContent = displayedNumberArray.join("");
+                    isDecimal = true;
+                } else return;
+        }
+    }
+}
+
+const decimalButton = document.getElementById("decimal");
+decimalButton.addEventListener('click', e => toggleDecimal());
+
+
+function resetModifiers(bool) {
+    allowModifiers = (bool === true) ? true : false;
     isNegative = false;
+    isDecimal = false;
+    displayedNumberArray = [];
 }
