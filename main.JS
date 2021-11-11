@@ -8,6 +8,7 @@ const substract = (a, b) => (a - b);
 const multiply = (a, b) => (a * b);
 const divide = (a, b) => (a / b);
 
+
 // eslint-disable-next-line require-jsdoc
 function operate(a, b, operator) {
     switch (operator) {
@@ -34,6 +35,7 @@ let displayedNumberArray = [];
 let displayedNumber = null;
 
 function computeNumber(button) {
+    if (!allowModifiers) resetModifiers(true);
     displayedNumberArray.push(button.id);
     display.textContent = displayedNumberArray.join("");
 }
@@ -46,6 +48,8 @@ numberButtons.addEventListener('click', e => {
 const operatorButtons = document.getElementById("operators-buttons-container");
 let operator = null;
 let previousNumber = 0;
+let allowModifiers = true;
+
 
 function selectOperator(button) {
     if (previousEqual) {
@@ -60,18 +64,18 @@ function selectOperator(button) {
                 previousNumber : +displayedNumberArray.join("");
             display.textContent = previousNumber;
             displayedNumberArray = [];
+
+            resetModifiers(true);
             break;
 
         default:
             displayedNumber = +displayedNumberArray.join("");
-            previousOperator = operator;
-            displayedNumber = operate(previousNumber,
-                displayedNumber, previousOperator);
+            previousNumber = operate(previousNumber,
+                displayedNumber, operator);
             operator = button.id;
-            display.textContent = displayedNumber;
+            display.textContent = previousNumber;
             displayedNumberArray = [];
-            previousNumber = displayedNumber;
-
+            resetModifiers(false);
             break;
 
     }
@@ -92,7 +96,6 @@ function pressequal() {
             previousEqual = operate(previousNumber, previousEqual,
                 previousOperator);
             display.textContent = previousEqual;
-
             break;
 
         default:
@@ -105,5 +108,37 @@ function pressequal() {
             operator = null;
             break;
     }
+    resetModifiers(false);
 }
 equalButton.addEventListener('click', pressequal);
+
+// Toggle negative number
+
+let isNegative = false;
+
+function toggleNegative() {
+    if (allowModifiers === true) {
+        isNegative = (isNegative === true) ? false : true;
+
+        switch (isNegative) {
+            case true:
+                displayedNumberArray.unshift("-");
+                display.textContent = displayedNumberArray.join("");
+                break;
+
+            default:
+                displayedNumberArray.shift();
+                display.textContent = displayedNumberArray.join("");
+                break;
+        }
+    } else return;
+}
+
+const negativeButton = document.getElementById("negative");
+
+negativeButton.addEventListener('click', e => toggleNegative());
+
+function resetModifiers(a) {
+    allowModifiers = (a === true) ? true : false;
+    isNegative = false;
+}
