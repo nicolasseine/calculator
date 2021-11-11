@@ -112,7 +112,9 @@ equalButton.addEventListener('click', pressequal);
 
 let isNegative = false;
 
-function toggleNegative() {
+const negativeButton = document.getElementById("negative");
+negativeButton.addEventListener('click', function toggleNegative() {
+
     if (allowModifiers === true) {
         isNegative = (isNegative === true) ? false : true;
 
@@ -128,23 +130,21 @@ function toggleNegative() {
                 break;
         }
     } else return;
-}
-
-const negativeButton = document.getElementById("negative");
-negativeButton.addEventListener('click', e => toggleNegative());
+});
 
 // Toggle decimal
 
 let isDecimal = false;
 
-function toggleDecimal() {
+const decimalButton = document.getElementById("decimal");
+decimalButton.addEventListener('click', function toggleDecimal() {
     if (allowModifiers === true) {
+
         switch (displayedNumberArray.length) {
 
             case (0):
                 displayedNumberArray.unshift("0", ".");
                 display.textContent = displayedNumberArray.join("");
-
                 break;
 
             default:
@@ -152,13 +152,42 @@ function toggleDecimal() {
                     displayedNumberArray.push(".");
                     display.textContent = displayedNumberArray.join("");
                     isDecimal = true;
+                    break;
                 } else return;
         }
     }
-}
+});
 
-const decimalButton = document.getElementById("decimal");
-decimalButton.addEventListener('click', e => toggleDecimal());
+// Clear and backspace
+const backspaceButton = document.getElementById("backspace");
+backspaceButton.addEventListener('click', function backspace() {
+
+    switch (displayedNumberArray.length) {
+        case 0:
+            break;
+        case 1:
+            displayedNumberArray = [];
+            display.textContent = "0";
+            break;
+
+        default:
+            displayedNumberArray.pop();
+            display.textContent = displayedNumberArray.join("");
+            break;
+    }
+});
+
+const clearButton = document.getElementById("clear");
+clearButton.addEventListener('click', function clear() {
+
+    previousNumber = 0;
+    previousOperator = 0;
+    displayedNumber = 0;
+    previousEqual = 0;
+    displayedNumberArray = [];
+    display.textContent = "0";
+    resetModifiers(true);
+});
 
 
 function resetModifiers(bool) {
