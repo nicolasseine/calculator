@@ -1,15 +1,114 @@
-/* eslint-disable require-jsdoc */
-/* eslint-disable no-unused-vars */
-/* eslint-disable quotes */
 /* eslint-disable indent */
-// Basic operation functions
+/* eslint-disable require-jsdoc */
+/* eslint-disable quotes */
+// Load-up
+
+let mode = "first";
+
+// Mode : input first or second number
+const numberButtons = document.getElementById("numbers-buttons-container");
+const display = document.getElementById("display");
+let displayedNumberArray = [];
+
+function computeNumber(button) {
+
+    if (mode === "result") {
+        clear();
+        mode = "first"
+    } else if (mode === "blocked") {
+        clear();
+    } else {
+        mode = (operator === null) ? "first" : "second";
+    }
+    inputNumber(button);
+}
+
+
+function inputNumber(button) {
+    if (displayedNumberArray.length < 9) {
+        displayedNumberArray.push(button);
+        display.textContent = displayedNumberArray.join("");
+    }
+}
+
+numberButtons.addEventListener('click', e => {
+    if (e.target.nodeName === "BUTTON") computeNumber(e.target.id);
+});
+
+// Mode: imput operator
+
+const operatorButtons = document.getElementById("operators-buttons-container");
+let operator = null;
+let firstNumber = null;
+let secondNumber = null;
+
+
+function selectOperator(button) {
+
+    switch (mode) {
+        case "first":
+        case "result":
+            mode = "operator";
+            break;
+        case "second":
+            mode = "result";
+            break;
+    }
+
+    switch (mode) {
+        case "operator":
+            operator = button;
+            firstNumber = (firstNumber || +displayedNumberArray.join(""));
+            resetArray();
+            break;
+
+        case "result":
+            secondNumber = +displayedNumberArray.join("");
+            firstNumber = operate(firstNumber, secondNumber, operator);
+            computeResultForDisplay(firstNumber);
+            mode = "operator";
+            operator = button;
+            resetArray();
+
+            break;
+        case "blocked":
+            clear();
+            break;
+
+    }
+}
+
+function computeResultForDisplay(result) {
+    result = result.toString();
+    if (+result >= 10 ** 9) {
+        display.textContent = result.slice(0, 8) + "E";
+        mode = "blocked";
+    } else if (result.length > 9) {
+        result = result.slice(0, 8);
+
+        if (result.charAt(result.length - 1) === ".") {
+            result = result.slice(0, 8);
+        }
+        display.textContent = result;
+
+    } else display.textContent = result;
+
+}
+
+
+operatorButtons.addEventListener('click', e => {
+    if (e.target.nodeName === "BUTTON") selectOperator(e.target.id);
+});
+
+
+//Press equal : compute and display result
+
+// Helpers functions
 const add = (a, b) => (a + b);
 const substract = (a, b) => (a - b);
 const multiply = (a, b) => (a * b);
 const divide = (a, b) => (a / b);
 
-
-// eslint-disable-next-line require-jsdoc
 function operate(a, b, operator) {
     switch (operator) {
         case "plus":
@@ -28,86 +127,29 @@ function operate(a, b, operator) {
 }
 
 
-// Inputting numbers when pressing buttons
-const numberButtons = document.getElementById("numbers-buttons-container");
-const display = document.getElementById("display");
-let displayedNumberArray = [];
-let displayedNumber = null;
-
-function computeNumber(button) {
-    if (!allowModifiers) resetModifiers(true);
-    while (displayedNumberArray.length < 10) {
-        displayedNumberArray.push(button);
-        display.textContent = displayedNumberArray.join("");
-    }
-}
-
-numberButtons.addEventListener('click', e => {
-    if (e.target.nodeName === "BUTTON") computeNumber(e.target.id);
-    console.log(e.target.id);
-});
-
-// Clicking an operator
-const operatorButtons = document.getElementById("operators-buttons-container");
-let operator = null;
-let previousNumber = 0;
-let allowModifiers = true;
-
-
-function selectOperator(button) {
-    if (previousEqual) {
-        previousNumber = previousEqual;
-        previousEqual = null;
-    }
-
-    switch (operator) {
-        case null:
-            operator = button;
-            previousNumber = (displayedNumberArray.length === 0) ?
-                previousNumber : +displayedNumberArray.join("");
-            display.textContent = previousNumber;
-            resetModifiers(true);
-            break;
-
-        default:
-            displayedNumber = +displayedNumberArray.join("");
-            previousNumber = operate(previousNumber,
-                displayedNumber, operator);
-            operator = button;
-            display.textContent = previousNumber;
-            resetModifiers(false);
-            break;
-
-    }
-}
-
-
-operatorButtons.addEventListener('click', e => {
-    if (e.target.nodeName === "BUTTON") selectOperator(e.target.id);
-});
-// clicking "equal"
 const equalButton = document.getElementById("equal");
-let previousEqual = null;
-let previousOperator = null;
+
 
 function pressequal() {
-    switch (!!previousEqual) {
-        case true:
-            previousEqual = operate(previousNumber, previousEqual,
-                previousOperator);
-            display.textContent = previousEqual;
+    switch (mode) {
+        case "second":
+            mode = "result"
+            secondNumber = +displayedNumberArray.join("");
+            firstNumber = operate(firstNumber, secondNumber, operator);
+            computeResultForDisplay(firstNumber);
+            resetArray();
+
             break;
 
-        default:
-            displayedNumber = +displayedNumberArray.join("");
-            previousEqual = operate(previousNumber, displayedNumber, operator);
-            display.textContent = previousEqual;
-            previousNumber = displayedNumber;
-            previousOperator = operator;
-            operator = null;
+        case "result":
+            firstNumber = operate(firstNumber, secondNumber, operator);
+            computeResultForDisplay(firstNumber);
+            resetArray();
+            break;
+        case "blocked":
+            clear();
             break;
     }
-    resetModifiers(false);
 }
 equalButton.addEventListener('click', pressequal);
 
@@ -118,21 +160,36 @@ let isNegative = false;
 const negativeButton = document.getElementById("negative");
 negativeButton.addEventListener('click', function toggleNegative() {
 
-    if (allowModifiers === true) {
-        isNegative = (isNegative === true) ? false : true;
+    switch (mode) {
+        case ("first" || "second"):
+            isNegative = !isNegative;
 
-        switch (isNegative) {
-            case true:
-                displayedNumberArray.unshift("-");
-                display.textContent = displayedNumberArray.join("");
-                break;
+            switch (isNegative) {
+                case true:
+                    displayedNumberArray.unshift("-");
+                    display.textContent = displayedNumberArray.join("");
+                    break;
 
-            default:
-                displayedNumberArray.shift();
-                display.textContent = displayedNumberArray.join("");
-                break;
-        }
-    } else return;
+                case false:
+                    displayedNumberArray.shift();
+                    break;
+            }
+            break;
+        case "operator":
+            mode = "second";
+            resetArray();
+            isNegative = true;
+            displayedNumberArray.unshift("-");
+            display.textContent = displayedNumberArray.join("");
+            break;
+
+        case "result":
+            clear();
+            mode = "first";
+            isNegative = true;
+            displayedNumberArray.unshift("-");
+            display.textContent = displayedNumberArray.join("");
+    }
 });
 
 // Toggle decimal
@@ -143,11 +200,10 @@ const decimalButton = document.getElementById("decimal");
 decimalButton.addEventListener('click', toggleDecimal);
 
 function toggleDecimal() {
-    if (allowModifiers === true) {
-
+    if (mode === "first" || mode === "second") {
         switch (displayedNumberArray.length) {
 
-            case (0):
+            case 0:
                 displayedNumberArray.unshift("0", ".");
                 display.textContent = displayedNumberArray.join("");
                 break;
@@ -165,41 +221,45 @@ function toggleDecimal() {
 
 // Clear and backspace
 const backspaceButton = document.getElementById("backspace");
-backspaceButton.addEventListener('click', function backspace() {
+backspaceButton.addEventListener('click', backspace);
 
-    switch (displayedNumberArray.length) {
-        case 0:
-            break;
-        case 1:
-            displayedNumberArray = [];
-            display.textContent = "0";
-            break;
+function backspace() {
+    if (mode === "first" || mode === "second") {
+        switch (displayedNumberArray.length) {
+            case 0:
+                break;
+            case 1:
+                displayedNumberArray = [];
+                display.textContent = "0";
+                break;
 
-        default:
-            displayedNumberArray.pop();
-            display.textContent = displayedNumberArray.join("");
-            break;
+            default:
+                displayedNumberArray.pop();
+                display.textContent = displayedNumberArray.join("");
+                break;
+        }
     }
-});
+}
 
 const clearButton = document.getElementById("clear");
-clearButton.addEventListener('click', function clear() {
+clearButton.addEventListener('click', clear);
 
-    previousNumber = 0;
-    previousOperator = 0;
-    displayedNumber = 0;
-    previousEqual = 0;
-    displayedNumberArray = [];
+function clear() {
+    firstNumber = null;
+    secondNumber = null;
+    operator = null;
+    displayedNumberArray.length = 0;
     display.textContent = "0";
-    resetModifiers(true);
-});
+    isDecimal = false;
+    isNegative = false;
+    mode = "first";
+};
 
 
-function resetModifiers(bool) {
-    allowModifiers = (bool === true) ? true : false;
+function resetArray() {
     isNegative = false;
     isDecimal = false;
-    displayedNumberArray = [];
+    displayedNumberArray.length = 0;
 }
 
 
@@ -214,12 +274,8 @@ document.addEventListener("keydown", function (e) {
     if (e.key === "*") selectOperator("multiply");
     if (e.key.match(numeric)) computeNumber(e.key);
     if (e.key === "Enter") pressequal();
-    if (e.key === "Escape") clearButton();
-    if (e.key === "Backspace") backspaceButton();
+    if (e.key === "Escape") clear();
+    if (e.key === "Backspace") backspace();
     if (e.key === ".") toggleDecimal();
-
-
-
-
 
 });
