@@ -36,8 +36,10 @@ let displayedNumber = null;
 
 function computeNumber(button) {
     if (!allowModifiers) resetModifiers(true);
-    displayedNumberArray.push(button);
-    display.textContent = displayedNumberArray.join("");
+    while (displayedNumberArray.length < 10) {
+        displayedNumberArray.push(button);
+        display.textContent = displayedNumberArray.join("");
+    }
 }
 
 numberButtons.addEventListener('click', e => {
