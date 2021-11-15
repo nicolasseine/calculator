@@ -43,6 +43,34 @@ let operator = null;
 let firstNumber = null;
 let secondNumber = null;
 
+// Memory buttons
+let stored = "";
+
+
+const memPlusButton = document.getElementById("mem+");
+memPlusButton.addEventListener('click', memPlus);
+
+const memCallButton = document.getElementById("memcall");
+memCallButton.addEventListener('click', memCall);
+
+
+function memPlus() {
+    stored = display.textContent;
+};
+
+function memCall() {
+    if (mode === "result") {
+        clear();
+        mode = "first";
+    } else if (mode === "blocked") {
+        clear();
+    } else {
+        mode = (operator === null) ? "first" : "second";
+    }
+    displayedNumberArray = stored.split("");
+    display.textContent = displayedNumberArray.join("");
+}
+
 
 function selectOperator(button) {
 
@@ -115,7 +143,7 @@ operatorButtons.addEventListener('click', e => {
 const add = (a, b) => (a + b);
 const substract = (a, b) => (a - b);
 const multiply = (a, b) => (a * b);
-const divide = (a, b) => (a / b);
+const divide = (a, b) => b === 0 ? "Error" : (a / b);
 
 function operate(a, b, operator) {
     switch (operator) {
@@ -141,7 +169,7 @@ const equalButton = document.getElementById("equal");
 function pressequal() {
     switch (mode) {
         case "second":
-            mode = "result"
+            mode = "result";
             secondNumber = +displayedNumberArray.join("");
             firstNumber = operate(firstNumber, secondNumber, operator);
             computeResultForDisplay(firstNumber);
@@ -275,17 +303,52 @@ function resetArray() {
 
 document.addEventListener("keydown", function (e) {
     const numeric = /["0-9"]/;
+    let activeButton;
 
-    if (e.key === "+") selectOperator("plus");
-    if (e.key === "-") selectOperator("minus");
-    if (e.key === "/") selectOperator("divide");
-    if (e.key === "*") selectOperator("multiply");
-    if (e.key.match(numeric)) computeNumber(e.key);
-    if (e.key === "Enter") pressequal();
-    if (e.key === "Escape") clear();
-    if (e.key === "Backspace") backspace();
-    if (e.key === ".") toggleDecimal();
+    function buttonEffect(id) {
+        let activeButton = document.getElementById(id);
+        activeButton.classList.add("active-button");
+        setTimeout(() => {
+            activeButton.classList.remove("active-button")
+        }, 100);
+    }
 
+    if (e.key === "+") {
+        selectOperator("plus");
+        buttonEffect("plus");
+    }
+    if (e.key === "-") {
+        selectOperator("minus");
+        buttonEffect("minus");
+    }
+    if (e.key === "/") {
+        selectOperator("divide");
+        buttonEffect("divide");
+    }
+    if (e.key === "*") {
+        selectOperator("multiply");
+        buttonEffect("divide");
+    }
+    if (e.key.match(numeric)) {
+        computeNumber(e.key);
+        buttonEffect(`${e.key}`);
+    }
+    if (e.key === "Enter") {
+        pressequal();
+        buttonEffect("equal");
+    }
+    if (e.key === "Escape") {
+        clear();
+        buttonEffect("clear");
+    }
+    if (e.key === "Backspace") {
+        backspace();
+        buttonEffect("backspace");
+    }
+    if (e.key === ".") {
+        toggleDecimal();
+        buttonEffect("decimal");
+    }
 });
 
 display.textContent = "0";
