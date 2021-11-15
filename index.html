@@ -7,47 +7,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Good ol' calculator</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/segment7" type="text/css" />
     <script src="main.JS" defer></script>
 </head>
 
 <body>
 
-    <div id="screen">
-        <p id=display></p>
-    </div>
-    <div id=numbers-buttons-container>
-        <div><button id="1">1</button></div>
-        <div><button id="2">2</button></div>
-        <div><button id="3">3</button></div>
-        <div><button id="4">4</button></div>
-        <div><button id="5">5</button></div>
-        <div><button id="6">6</button></div>
-        <div><button id="7">7</button></div>
-        <div><button id="8">8</button></div>
-        <div><button id="9">9</button></div>
-        <div><button id="0">0</button></div>
-    </div>
+    <div id="calculator">
+        <div id="calc-name">
+            <p> SUPERCALC 2000-9D</p>
+            <div id="solar">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
 
-    <div id=modifiers-container>
-        <button id="decimal">.</button>
-        <button id="negative"> +/- </button>
-    </div>
-    <div id=clearbuttons-container>
-        <button id="backspace">leftarrow</button>
-        <button id="clear"> C </button>
-    </div>
-    <div id=memory>
-        <button id="mem+">Mem+</button>
-        <button id="mem-clear"> MemC </button>
-    </div>
+        <div id="screen">
+            <p id=display-background>888888888</p>
+            <p id=display></p>
+        </div>
 
-    <div id=operators-buttons-container>
-        <button id="plus">+</button>
-        <button id="minus">-</button>
-        <button id="multiply">x</button>
-        <button id="divide">/</button>
+        <div id=numbers-buttons-container>
+            <div class="calc-button number-button" id="1">1</div>
+            <div class="calc-button number-button" id="2">2</div>
+            <div class="calc-button number-button" id="3">3</div>
+            <div class="calc-button number-button" id="4">4</div>
+            <div class="calc-button number-button" id="5">5</div>
+            <div class="calc-button number-button" id="6">6</div>
+            <div class="calc-button number-button" id="7">7</div>
+            <div class="calc-button number-button" id="8">8</div>
+            <div class="calc-button number-button" id="9">9</div>
+            <div class=" calc-button modifier-button" id="decimal">.</div>
+            <div class=" calc-button modifier-button" id="negative"> +/- </div>
+            <div class="calc-button number-button" id="0">0</div>
+        </div>
+
+
+        <div id=clearbuttons-container>
+            <div class="calc-button clearbutton" id="backspace">left</div>
+            <div class="calc-button clearbutton" id="clear"> C </div>
+        </div>
+        <div id=memory>
+            <div class="calc-button memory-button" id="mem+">M+</div>
+            <div class="calc-button memory-button" id="mem-clear"> MC </div>
+        </div>
+
+        <div id=operators-buttons-container>
+            <div class="calc-button operator-button" id="plus">+</div>
+            <div class="calc-button operator-button" id="minus">-</div>
+            <div class="calc-button operator-button" id="multiply">x</div>
+            <div class="calc-button operator-button" id="divide">/</div>
+        </div>
+        <div id="equal" class="equal-button calc-button"> = </div>
     </div>
-    <div class=equal-button> <button id="equal">=</button>
     </div>
 </body>
 

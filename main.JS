@@ -14,7 +14,7 @@ function computeNumber(button) {
 
     if (mode === "result") {
         clear();
-        mode = "first"
+        mode = "first";
     } else if (mode === "blocked") {
         clear();
     } else {
@@ -32,7 +32,8 @@ function inputNumber(button) {
 }
 
 numberButtons.addEventListener('click', e => {
-    if (e.target.nodeName === "BUTTON") computeNumber(e.target.id);
+    if (e.target.classList.contains("number-button"))
+        computeNumber(e.target.id);
 });
 
 // Mode: imput operator
@@ -89,6 +90,13 @@ function computeResultForDisplay(result) {
         if (result.charAt(result.length - 1) === ".") {
             result = result.slice(0, 8);
         }
+        while (result.charAt(result.length - 1) === "0") {
+            for (i = 1; i < result.length - 1; i++) {
+                if (result.charAt(i) === ".") {
+                    result = result.slice(0, result.length - 1);
+                }
+            }
+        }
         display.textContent = result;
 
     } else display.textContent = result;
@@ -97,7 +105,7 @@ function computeResultForDisplay(result) {
 
 
 operatorButtons.addEventListener('click', e => {
-    if (e.target.nodeName === "BUTTON") selectOperator(e.target.id);
+    if (e.target.classList.contains("operator-button")) selectOperator(e.target.id);
 });
 
 
@@ -279,3 +287,5 @@ document.addEventListener("keydown", function (e) {
     if (e.key === ".") toggleDecimal();
 
 });
+
+display.textContent = "0";

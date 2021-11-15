@@ -1,65 +1,179 @@
 body {
-    width: 80%;
-    height: 80%;
-    display: grid;
-    grid-template-columns: repeat (5, 1fr);
-    grid-template-rows: repeat (6, 1fr);
+    color: white;
 }
 
+#calculator {
+    width: 350px;
+    height: 500px;
+    border-radius: 5%;
+    display: grid;
+    grid-template-columns: repeat (5, 1fr);
+    grid-template-rows: 1fr, repeat (6, 50px);
+    background-color: rgb(68, 71, 71);
+    gap: 10px;
+    padding: 20px;
+}
+
+.calc-button {
+    border-radius: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: black 3px 2px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+#calc-name {
+    grid-row: 1;
+    grid-column: span 5;
+    font-family: 'Courier New', Courier, monospace;
+    font-style: italic;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#solar {
+    height: 50%;
+    background-color: rgb(133, 134, 130);
+    box-shadow: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1px;
+    border-radius: 0;
+    gap: 2px;
+}
+
+#solar div {
+    width: 20px;
+    height: 30px;
+    padding: 0;
+    background-color: rgb(36, 36, 36);
+    flex: 1 1 0;
+}
 
 #screen {
     grid-column: 1/6;
-    height: 50px;
+    grid-row: 2;
     border: 3px black;
-    background-color: burlywood;
+    background-color: rgb(225, 236, 199);
+    height: min-content;
+    text-align: right;
+    width: 95%;
+    justify-self: right;
+}
+
+
+#display-background {
+    margin: 0;
+    padding: 0;
     font-weight: bold;
-    font-size: large;
+    color: rgb(175, 187, 163);
+    font-family: Segment7Standard, monospace;
+    font-size: 60px;
+    padding: 6px;
+    position: fixed;
+    top: 102px;
+    left: 50px;
+    z-index: 0;
+    opacity: 20%;
+
+}
+
+#display {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    font-family: Segment7Standard, monospace;
+    font-size: 60px;
+    padding: 6px;
+    z-index: 1;
+
 }
 
 #memory {
     grid-column: 1/ span 1;
-    grid-row: 2/ span 2;
+    grid-row: 3/ span 2;
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.memory-button {
+    background-color: rgb(20, 20, 20);
+    height: 100%;
+    flex: 1;
+    font-size: 20px;
 }
 
 #numbers-buttons-container {
     grid-column: 2/ span 3;
-    grid-row: 2/ span 4;
+    grid-row: 3/ span 4;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat (4, 1fr) auto;
+    gap: 10px;
+
+    /* background-color: wheat; */
+
 }
 
-#numbers-buttons-container :last-child {
-    grid-column: 3/4;
+.number-button {
+    background-color: rgb(175, 175, 175);
+    width: 100%;
 }
+
+
 
 #operators-buttons-container {
     grid-column: 5/ span 1;
-    grid-row: 2/ span 5;
+    grid-row: 3/ span 4;
     display: flex;
     flex-direction: column;
+    gap: 10px;
+}
+
+.operator-button {
+    background-color: rgb(20, 20, 20);
+    flex: 1;
+    height: 100%;
+    width: 100%;
+
 }
 
 #clearbuttons-container {
     grid-column: 1/ span 1;
-    grid-row: 4 / span 2;
+    grid-row: 5 / span 2;
     display: flex;
     flex-direction: column;
+    gap: 10px;
+
 }
 
-#modifiers-container {
-    grid-column: 2/ span 2;
-    grid-row: 5/ span 1;
-    display: flex;
+.clearbutton {
+    background-color: rgb(189, 118, 123);
+    height: 100%;
+    flex: 1;
+    font-size: 20px;
+
 }
 
-#equal-button {
-    grid-column: 6/7;
-    grid-row: 2/ span 4;
-    min-width: max-content;
+.modifier-button {
+    background-color: rgb(100, 100, 100);
 }
 
-button {
-    width: 100%;
+#negative {
+    font-size: 20px;
+}
+
+.equal-button {
+    grid-row: 7/8;
+    grid-column: 2/ span 4;
+    background-color: rgb(20, 20, 20);
 }
