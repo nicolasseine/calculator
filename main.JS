@@ -23,6 +23,13 @@ function computeNumber(button) {
     inputNumber(button);
 }
 
+function updateDisplay(output) {
+    display.style.opacity = "0";
+    setTimeout(() => {
+        display.textContent = output;
+        display.style.opacity = "1";
+    }, 10);
+}
 
 function inputNumber(button) {
     if (displayedNumberArray.length < 9) {
@@ -44,7 +51,7 @@ let firstNumber = null;
 let secondNumber = null;
 
 // Memory buttons
-let stored = "";
+let stored = "0";
 
 
 const memPlusButton = document.getElementById("mem+");
@@ -68,7 +75,7 @@ function memCall() {
         mode = (operator === null) ? "first" : "second";
     }
     displayedNumberArray = stored.split("");
-    display.textContent = displayedNumberArray.join("");
+    updateDisplay(displayedNumberArray.join(""));
 }
 
 
@@ -88,6 +95,8 @@ function selectOperator(button) {
         case "operator":
             operator = button;
             firstNumber = (firstNumber || +displayedNumberArray.join(""));
+            updateDisplay(firstNumber);
+
             resetArray();
             break;
 
@@ -105,12 +114,13 @@ function selectOperator(button) {
             break;
 
     }
+
 }
 
 function computeResultForDisplay(result) {
     result = result.toString();
     if (+result >= 10 ** 9) {
-        display.textContent = result.slice(0, 8) + "E";
+        updateDisplay(result.slice(0, 8) + "E");
         mode = "blocked";
     } else if (result.length > 9) {
         result = result.slice(0, 8);
@@ -125,9 +135,9 @@ function computeResultForDisplay(result) {
                 }
             }
         }
-        display.textContent = result;
+        updateDisplay(result);
+    } else updateDisplay(result);
 
-    } else display.textContent = result;
 
 }
 
@@ -203,7 +213,7 @@ negativeButton.addEventListener('click', function toggleNegative() {
             switch (isNegative) {
                 case true:
                     displayedNumberArray.unshift("-");
-                    display.textContent = displayedNumberArray.join("");
+                    updateDisplay(displayedNumberArray.join(""));
                     break;
 
                 case false:
@@ -216,7 +226,7 @@ negativeButton.addEventListener('click', function toggleNegative() {
             resetArray();
             isNegative = true;
             displayedNumberArray.unshift("-");
-            display.textContent = displayedNumberArray.join("");
+            updateDisplay(displayedNumberArray.join(""));
             break;
 
         case "result":
@@ -224,7 +234,7 @@ negativeButton.addEventListener('click', function toggleNegative() {
             mode = "first";
             isNegative = true;
             displayedNumberArray.unshift("-");
-            display.textContent = displayedNumberArray.join("");
+            updateDisplay(displayedNumberArray.join(""));
     }
 });
 
@@ -241,13 +251,13 @@ function toggleDecimal() {
 
             case 0:
                 displayedNumberArray.unshift("0", ".");
-                display.textContent = displayedNumberArray.join("");
+                updateDisplay(displayedNumberArray.join(""));
                 break;
 
             default:
                 if (!isDecimal) {
                     displayedNumberArray.push(".");
-                    display.textContent = displayedNumberArray.join("");
+                    updateDisplay(displayedNumberArray.join(""));
                     isDecimal = true;
                     break;
                 } else return;
@@ -271,7 +281,7 @@ function backspace() {
 
             default:
                 displayedNumberArray.pop();
-                display.textContent = displayedNumberArray.join("");
+                updateDisplay(displayedNumberArray.join(""));
                 break;
         }
     }
@@ -285,7 +295,7 @@ function clear() {
     secondNumber = null;
     operator = null;
     displayedNumberArray.length = 0;
-    display.textContent = "0";
+    updateDisplay("0");
     isDecimal = false;
     isNegative = false;
     mode = "first";
@@ -303,7 +313,6 @@ function resetArray() {
 
 document.addEventListener("keydown", function (e) {
     const numeric = /["0-9"]/;
-    let activeButton;
 
     function buttonEffect(id) {
         let activeButton = document.getElementById(id);
@@ -350,5 +359,12 @@ document.addEventListener("keydown", function (e) {
         buttonEffect("decimal");
     }
 });
+
+display.addEventListener('DOMCharacterDataModified', blink);
+
+function blink() {
+    display.style.opacity = "0";
+    setTimeout(() => display.style.opacity = 1, 100);
+}
 
 display.textContent = "0";
