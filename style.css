@@ -9,14 +9,14 @@ body {
     border-radius: 5%;
     display: grid;
     grid-template-columns: repeat (5, 1fr);
-    grid-template-rows: 1fr 1fr repeat (5, 50px);
+    grid-template-rows: 62px 88x repeat (5, 51px);
     background-color: rgb(68, 71, 71);
     gap: 10px;
     padding: 20px;
     position: fixed;
     top: 8%;
     left: 20%;
-    transform: rotate(-5deg);
+    transform: rotate(-5deg) scale(0.9);
     border: solid 7px rgb(49, 49, 49);
     box-shadow: 20px -3px 15px 15px #ca8e01;
 }
@@ -99,7 +99,7 @@ div.active-button {
     padding: 6px;
     position: absolute;
     top: 100px;
-    left: 40px;
+    left: 42px;
     z-index: 0;
     opacity: 20%;
 
@@ -114,23 +114,35 @@ div.active-button {
     font-size: 60px;
     padding: 6px;
     z-index: 1;
+    height: min-content;
+}
+
+#on {
+    grid-column: 1;
+    grid-row: 3/span 2;
+    font-size: 20px;
+    background-color: rgb(95, 145, 95);
+    margin-top: 5px;
+    margin-bottom: 5px;
 
 }
 
 #memory {
     grid-column: 1/ span 1;
-    grid-row: 3/ span 2;
+    grid-row: 5/ span 2;
     display: flex;
     flex-direction: column;
     gap: 10px;
     justify-content: space-between;
 }
 
+
 .memory-button {
     background-color: rgb(20, 20, 20);
     height: 100%;
     flex: 1;
     font-size: 20px;
+    max-height: 55px;
 }
 
 #numbers-buttons-container {
@@ -170,7 +182,7 @@ div.active-button {
 
 #clearbuttons-container {
     grid-column: 1/ span 1;
-    grid-row: 5 / span 2;
+    grid-row: 7;
     display: flex;
     flex-direction: column;
     gap: 10px;
