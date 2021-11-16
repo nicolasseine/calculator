@@ -336,7 +336,7 @@ document.addEventListener("keydown", function (e) {
     }
     if (e.key === "*") {
         selectOperator("multiply");
-        buttonEffect("divide");
+        buttonEffect("multiply");
     }
     if (e.key.match(numeric)) {
         computeNumber(e.key);
